@@ -25,6 +25,7 @@ def upload_image():
   destination = "/".join([target, filename])
   file.save(destination)
   res = main_detection(filename)
+  print(res)
   user = User(img=filename, result_number=res)
   db_session.add(user)
   db_session.commit()

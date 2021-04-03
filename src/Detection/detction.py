@@ -6,6 +6,8 @@ from .Analyze import analyze_number
 
 def process_image(image_name):
     crop_dir = './src/images_crop/'
+    imn = image_name.split('.')[0]
+    crop_img_name = crop_dir + imn + '.png'
     try:
         img = cv2.imread('./src/images/' + image_name, cv2.IMREAD_COLOR)
         img = cv2.resize(img, (600, 400))
@@ -47,13 +49,23 @@ def process_image(image_name):
         Cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
         img = cv2.resize(img, (500, 300))
         Cropped = cv2.resize(Cropped, (400, 200))
-        crop_img_name = crop_dir + image_name
         cv2.imwrite(crop_img_name, Cropped)
         res = analyze_number(crop_img_name)
         print(res)
         return res
-    except:
-        return False
+    except Exception as Ex:
+        print(Ex)
+        img = cv2.imread('./src/images/' + image_name, cv2.IMREAD_COLOR)
+        img = cv2.resize(img, (600, 400))
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.bilateralFilter(gray, 13, 15, 15)
+        print(crop_img_name)
+        cv2.imwrite(crop_img_name, gray)
+        res = analyze_number(crop_img_name)
+        print(res)
+        return res
+
 
 def process_result(res):
     numbers = []
